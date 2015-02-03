@@ -1,0 +1,18 @@
+[package]
+name = "imgui"
+version = "0.0.1"
+authors = ["Nik Voss <niklas.voss@gmail.com>"]
+build = "imgui-sys/build.rs"
+links = "imgui"
+description = "..."
+license = "MIT"
+repository = "https://github.com/trevex/rust-imgui"
+
+[dependencies.gl]
+git = "https://github.com/bjz/gl-rs"
+
+[build-dependencies]
+gcc = "*"
+
+[dev-dependencies.glfw]
+git = "https://github.com/bjz/glfw-rs.git"

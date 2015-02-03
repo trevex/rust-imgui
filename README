@@ -1,0 +1,9 @@
+Bindings for imgui an OpenGL intermediate mode gui system.
+
+Originally from recast:
+https://github.com/memononen/recastnavigation
+External C++ gui library:
+https://github.com/AdrienHerubel/imgui
+
+Notes:
+* example need to be run from project root... (otherwise won't find font file)
