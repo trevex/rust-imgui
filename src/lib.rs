@@ -1,4 +1,3 @@
-#![feature(libc, std_misc, path)]
 extern crate libc;
 extern crate gl;
 
@@ -50,7 +49,7 @@ impl UIRoot {
 
     pub fn draw_text(&self, pos: (i32, i32), align: i32, text: &str, color: u32) {
         let (x, y) = pos;
-        let c_text = CString::from_slice(text.as_bytes());
+        let c_text = CString::new(text.as_bytes()).unwrap();
         unsafe { ffi::imguiDrawText(x, y, align, c_text.as_ptr(), color); }
     }
 
@@ -77,7 +76,7 @@ impl Drop for UIRoot {
 impl UINode {
 
     pub fn scroll_area<F>(&self, text: &str, pos: (i32, i32), size: (i32, i32), scroll: &mut i32, child: F) where F: FnOnce(UINode) {
-        let c_text = CString::from_slice(text.as_bytes());
+        let c_text = CString::new(text.as_bytes()).unwrap();
         let (x, y) = pos;
         let (w, h) = size;
         unsafe { ffi::imguiBeginScrollArea(c_text.as_ptr(), x, y, w, h, scroll as *mut i32); }
@@ -102,17 +101,17 @@ impl UINode {
     }
 
     pub fn label(&self, text: &str) {
-        let c_text = CString::from_slice(text.as_bytes());
+        let c_text = CString::new(text.as_bytes()).unwrap();
         unsafe { ffi::imguiLabel(c_text.as_ptr()); }
     }
 
     pub fn value(&self, text: &str) {
-        let c_text = CString::from_slice(text.as_bytes());
+        let c_text = CString::new(text.as_bytes()).unwrap();
         unsafe { ffi::imguiValue(c_text.as_ptr()); }
     }
 
     pub fn button(&self, text: &str, enabled: bool) -> bool {
-        let c_text = CString::from_slice(text.as_bytes());
+        let c_text = CString::new(text.as_bytes()).unwrap();
         unsafe {
             let result = ffi::imguiButton(c_text.as_ptr(), enabled as u32);
             if result == 0 {
@@ -124,7 +123,7 @@ impl UINode {
     }
 
     pub fn item(&self, text: &str, enabled: bool) -> bool {
-        let c_text = CString::from_slice(text.as_bytes());
+        let c_text = CString::new(text.as_bytes()).unwrap();
         unsafe {
             let result = ffi::imguiItem(c_text.as_ptr(), enabled as u32);
             if result == 0 {
@@ -136,7 +135,7 @@ impl UINode {
     }
 
     pub fn check(&self, text: &str, checked: bool, enabled: bool) -> bool {
-        let c_text = CString::from_slice(text.as_bytes());
+        let c_text = CString::new(text.as_bytes()).unwrap();
         unsafe {
             let result = ffi::imguiCheck(c_text.as_ptr(), checked as u32, enabled as u32);
             if result == 0 {
@@ -148,7 +147,7 @@ impl UINode {
     }
 
     pub fn collapse(&self, text: &str, checked: bool, enabled: bool) -> bool {
-        let c_text = CString::from_slice(text.as_bytes());
+        let c_text = CString::new(text.as_bytes()).unwrap();
         unsafe {
             let result = ffi::imguiCollapse(c_text.as_ptr(), checked as u32, enabled as u32);
             if result == 0 {
@@ -160,14 +159,14 @@ impl UINode {
     }
 
     pub fn slider(&self, text: &str, value: &mut f32, min: f32, max: f32, inc: f32, enabled: bool) {
-        let c_text = CString::from_slice(text.as_bytes());
+        let c_text = CString::new(text.as_bytes()).unwrap();
         unsafe { ffi::imguiSlider(c_text.as_ptr(), value as *mut f32, min, max, inc, enabled as u32); }
     }
 
 }
 
 pub fn init(font: &Path) -> Result<UIRoot, &'static str> {
-    let c_font = CString::from_slice(font.as_str().unwrap().as_bytes());
+    let c_font = CString::new(font.to_str().unwrap().as_bytes()).unwrap();
     unsafe {
         if ffi::imguiRenderGLInit(c_font.as_ptr()) == 0 {
             Err("Unable to initialize imgui!")
