@@ -1,15 +1,16 @@
-#![feature(path, core)]
 extern crate glfw;
 extern crate gl;
 extern crate imgui;
 
 use glfw::{Action, Context, Key};
+use std::path::Path;
+
 
 fn main() {
     let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
     glfw.window_hint(glfw::WindowHint::ContextVersion(3, 2));
-    glfw.window_hint(glfw::WindowHint::OpenglForwardCompat(true));
-    glfw.window_hint(glfw::WindowHint::OpenglProfile(glfw::OpenGlProfileHint::Core));
+    glfw.window_hint(glfw::WindowHint::OpenGlForwardCompat(true));
+    glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
 
     let (mut window, events) = glfw.create_window(800, 600, "Hello this is window", glfw::WindowMode::Windowed)
         .expect("Failed to create GLFW window.");
@@ -27,7 +28,7 @@ fn main() {
         gl::Disable(gl::DEPTH_TEST);
     }
 
-    let ui = imgui::init(&Path::new("./examples/droid_sans.ttf")).unwrap();
+    let ui = imgui::init(Path::new("./examples/droid_sans.ttf")).unwrap();
 
     let mut scroll_area_value = 0i32;
     let mut button_counter = 0u32;
@@ -85,7 +86,7 @@ fn main() {
                     println!("You clicked the button!");
                     button_counter += 1;
                 }
-                ui.value(format!("You clicked the button {} times.", button_counter).as_slice());
+                ui.value(&format!("You clicked the button {} times.", button_counter));
                 ui.button("Disabled", false);
                 ui.separator_line();
                 ui.separator();
@@ -126,12 +127,12 @@ fn main() {
                     ui.label("Lorem Ipsum and so on...");
                     ui.unindent();
                 }
-                if ui.collapse(format!("Selected file: {}", items[selected_file]).as_slice(), collapse_b, true) {
+                if ui.collapse(&format!("Selected file: {}", items[selected_file]), collapse_b, true) {
                     collapse_b = !collapse_b;
                 }
                 if collapse_b {
                     ui.indent();
-                    for i in range(0, 3) {
+                    for i in 0..3 {
                         if ui.item(items[i], true) {
                             selected_file = i;
                             collapse_b = !collapse_b;
